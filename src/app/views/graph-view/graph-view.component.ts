@@ -12,20 +12,27 @@ export class GraphViewComponent {
 	@Input() nodes: any;
 	@Input() edges: any;
 
+	private nodeVisibleList: any = [];
+
 	private typeList: any = [];
 	private typeDict: any = {};
 
 	private touchEvent: any;
 	private selectedNode: any;
+	private selectedNodeID: any;
 	private selectedData: any;
 	private showData: any;
 	private dataCount = 0;
 	private visible = false;
+	private visibleMenu = false;
+	private visibleJSON = false;
 	private isSelected = false;
+	private nodeJSON = "";
 	private isMore = true;
 	private left = '0';
 	private top = '0';
 
+	private contextMenuVisible = false;
 	private needClose = 0;
 
 	container: any;
@@ -98,19 +105,17 @@ export class GraphViewComponent {
 	constructor(private http: Http) {}
 
 	ngOnChanges(changes) {
-		console.log("[graph-view] \n Change", changes);
 		this.getTypes();
 		this.drawGraph();
 	}
 
 	drawGraph() {
-		console.log("[graph-view] \n Nodes, Edges:", this.nodes, this.edges);
-
 		var graphNodes = [];
 		for(var i = 0; i < this.nodes.length; i++) {
 			var node = this.nodes[i];
 			var idx = this.typeDict[node.type].index;
-			if(this.typeList[idx].isSelected) {
+			if((this.typeList[idx].isSelected == 1 && this.nodeVisibleList[i]) ||
+				this.typeList[idx].isSelected == 2) {
 				graphNodes.push(node);
 			}
 		}
@@ -128,39 +133,83 @@ export class GraphViewComponent {
 		this.graph = new vis.Network(this.container, data, options);
 		
 		var self = this;
-		this.graph.on('selectNode', function(clickObject) {
-			self.selectedNode = {};
-			self.selectedData = [];
-			self.visible = true;
-			self.isSelected = true;
-			self.isMore = false;
+		this.graph.on('selectNode', (clickObject) => {
+			this.isSelected = true;
+			this.selectedNode = {};
 
 			var nodeID = clickObject.nodes[0];
-			for(var i = 0; i < self.nodes.length; i++) {
-				var node = self.nodes[i];
+			for(var i = 0; i < this.nodes.length; i++) {
+				var node = this.nodes[i];
 				if(node.id == nodeID) {
-					self.selectedNode = node;
-					var keys = Object.keys(node.data);
-					for(var j = 0; j < keys.length; j++) {
-						var key = keys[j];
-						var obj = {
-							key: key,
-							value: node.data[key],
-						};
-						self.selectedData.push(obj);
-					}
+					this.selectedNode = node;
 					break;
 				}
 			}
 
-			self.dataCount = 0;
-			self.onShowMore(5);
-			self.needClose = 0;
+			console.log("SHOW NODE MENU");
+			self.visibleMenu = true;
 		});
+	}
+
+	onViewNode() {
+		this.selectedData = [];
+		this.visible = true;
+		this.visibleMenu = false;
+		this.visibleJSON = false;
+		this.isMore = false;
+
+		var keys = Object.keys(this.selectedNode.data);
+		for(var j = 0; j < keys.length; j++) {
+			var key = keys[j];
+			var obj = {
+				key: key,
+				value: this.selectedNode.data[key],
+			};
+			this.selectedData.push(obj);
+		}
+		console.log("NODE SELECTED");
+		this.dataCount = 0;
+		this.onShowMore(5);
+		this.needClose = 0;
+	}
+
+	onRemoveNode() {
+		this.visible = false;
+		this.visibleJSON = false;
+		this.visibleMenu = false;
+
+		for(var i = 0; i < this.nodes.length; i++) {
+			if(this.nodes[i].id == this.selectedNode.id) {
+				this.nodeVisibleList[i] = false;
+				break;
+			}
+		}
+
+		var dict = this.typeDict[this.selectedNode.type];
+		var self = this;
+		setTimeout(function () {
+			self.typeList[dict.index].isSelected = 1;
+			self.typeList[dict.index].isAllShowed = false;
+			self.refreshGraph(this.selectedNode);
+		}, 10);
+
+	}
+
+	onViewJSON() {
+		this.visibleJSON = true;
+		for(var i = 0; i < this.nodes.length; i++) {
+			if(this.nodes[i].id == this.selectedNode.id) {
+				this.nodeJSON = JSON.stringify(this.nodes[i], null, " ");
+				break;
+			}
+		}
+
+		this.nodeJSON = this.nodeJSON.replace(/,"/g, ', <br>"');
 	}
 
 	getTypes() {
 		this.typeDict = {};
+		this.nodeVisibleList = [];
 		for(var i = 0; i < this.nodes.length; i++) {
 			var obj = this.nodes[i];
 			var index = obj.type;
@@ -169,10 +218,12 @@ export class GraphViewComponent {
 					image: obj.image,
 					index: 0,
 					type: obj.type,
-					isSelected: true,
+					isSelected: 2,
+					isAllShowed: true,
 				};
 				this.typeDict[index] = type;
 			}
+			this.nodeVisibleList.push(true);
 		}
 
 		this.typeList = [];
@@ -183,6 +234,7 @@ export class GraphViewComponent {
 			this.typeDict[key].index = i;
 			this.typeList.push(obj);
 		}
+
 	}
 
 	refreshGraph(item) {
@@ -192,10 +244,12 @@ export class GraphViewComponent {
 	onTouch(event) {
 		if(this.isSelected) {
 			this.isSelected = false;
-			this.left = event.x + 'px';
-			this.top = event.y + 'px';
+			this.left = event.layerX + 'px';
+			this.top = (event.layerY + 62) + 'px';
 		} else {
 			this.visible = false;
+			this.visibleJSON = false;
+			this.visibleMenu = false;
 		}
 	}
 
@@ -221,5 +275,21 @@ export class GraphViewComponent {
 
 	onCloseTable() {
 		this.visible = false;
+	}
+
+	nodeChecked(item) {
+		var self = this;
+		setTimeout(function() {
+			if(item.isAllShowed) {
+				if(item.isSelected == 0) {
+					item.isSelected = 2;
+				} else {
+					item.isSelected = 0;
+				}
+			} else {
+				item.isSelected = (item.isSelected + 1) % 3;
+			}
+			self.refreshGraph(item);
+		}, 10);
 	}
 }

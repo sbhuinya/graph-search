@@ -19,6 +19,14 @@
 	margin-top: 3px;
 }
 
+.item-select-not-all {
+	color: #BBB;
+}
+
+.item-select-all {
+	color: darkgreen;
+}
+
 label {
 	margin: 0;
 }
@@ -101,4 +109,16 @@ label {
 
 .close-button:hover {
 	color: #333;
+}
+
+.mat-checkbox-background {
+	background-color: #c192a2;
+}
+
+.menu-item {
+	cursor: pointer;
+}
+
+.menu-item:hover {
+	color: darkblue;
 }

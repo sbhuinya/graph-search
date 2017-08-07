@@ -7,7 +7,8 @@
 			<ul style="padding: 0;">
 				<li class="type-item" *ngFor="let item of typeList">
 					<img class="item-img" src="{{item.image}}" onerror="this.src='assets/images/no_theme.png'">
-					<md-checkbox class="item-chk" [(ngModel)]="item.isSelected" (change)="refreshGraph(item)">{{item.type}}</md-checkbox>
+					<md-checkbox class="item-chk item-select-not-all" [ngModel]="item.isSelected" (click)="nodeChecked(item)"
+						[class.item-select-all]="item.isSelected == 2" >{{item.type}} Type</md-checkbox>
 				</li>
 			</ul>
 		</div>
@@ -28,4 +29,39 @@
 			</tr>
 		</table>
 	</div>
+</div>
+
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleMenu">
+	<div class="table-container">
+		<div class="table-head">Node : {{selectedNode.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
+		<table style="width: 100%">
+			<tr class="table-row even" (click)="onRemoveNode()">
+				<td class="menu-item">Remove from View</td>
+			</tr>
+
+			<tr class="table-row odd" (click)="onViewJSON()">
+				<td class="menu-item">View JSON</td>
+			</tr>
+
+			<tr class="table-row even" (click)="onViewNode()">
+				<td class="menu-item">View Node Data</td>
+			</tr>
+
+		</table>
+	</div>
+</div>
+
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleJSON">
+	<div class="table-container">
+		<div class="table-head">Node : {{selectedNode.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
+		<table style="width: 100%">
+			<tr class="table-row even" style="text-align: left;">
+				<td><div [innerHTML]="nodeJSON"></div></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div [style.left]="left" [style.top]="top" *ngIf="contextMenuVisible">
+	Wow amazing technique
 </div>

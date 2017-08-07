@@ -18,7 +18,7 @@ import {ToastyService, ToastyConfig, ToastOptions, ToastData} from 'ng2-toasty';
 export class AppComponent {
 
     /* ----------------- Variables ----------------- */
-    title = 'App Title!';   
+    title = 'Intel Search';
 
     nodes: any = [];
     edges: any = [];
