@@ -158,7 +158,7 @@ export class AppComponent {
         }
         else {
             this.activeItem = filteredText;
-            this.retrieveData(filteredText);
+            this.retrieveData(result.text);
         }
     }
 
