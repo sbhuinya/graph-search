@@ -21,6 +21,8 @@ import { RelationshipAddDialog } from './views/relationship-view/relationship-ad
 import { RelationshipEditDialog } from './views/relationship-view/relationship-edit-dialog/relationship-edit-dialog.component';
 import { DataAddDialog } from './views/relationship-view/data-add-dialog/data-add-dialog.component';
 
+import {ToastyModule} from 'ng2-toasty';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,6 +47,7 @@ import { DataAddDialog } from './views/relationship-view/data-add-dialog/data-ad
     MdCheckboxModule,
     MdDialogModule,
     MdInputModule,
+    ToastyModule.forRoot(),
   ],
   entryComponents: [
     TabularEditDialog,
@@ -58,6 +61,7 @@ import { DataAddDialog } from './views/relationship-view/data-add-dialog/data-ad
     MdCheckboxModule,
     MdDialogModule,
     MdInputModule,
+    ToastyModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
