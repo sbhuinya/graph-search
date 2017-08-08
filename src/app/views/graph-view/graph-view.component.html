@@ -15,23 +15,7 @@
 	</div>
 </div>
 
-<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visible">
-	<div class="table-container">
-		<div class="table-head">Node : {{selectedNode.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
-		<table style="width: 100%">
-			<tr class="table-row" *ngFor="let data of showData; let idx=index;" [class.even]="idx % 2 == 0" [class.odd]="idx % 2 != 0">
-				<td style="width: 40%; border: 1px solid grey;">{{data.key}}</td>
-				<td style="width: 60%; border: 1px solid grey;">{{data.value}}</td>
-			</tr>
-
-			<tr class="table-last" *ngIf="isMore">
-				<td colspan="2" class="more-option" (click)="onShowMore(5)"><div class="more-button">Show More..</div></td>
-			</tr>
-		</table>
-	</div>
-</div>
-
-<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleMenu">
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleNodeMenu">
 	<div class="table-container">
 		<div class="table-head">Node : {{selectedNode.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
 		<table style="width: 100%">
@@ -39,7 +23,7 @@
 				<td class="menu-item">Remove from View</td>
 			</tr>
 
-			<tr class="table-row odd" (click)="onViewJSON()">
+			<tr class="table-row odd" (click)="onViewNodeJSON()">
 				<td class="menu-item">View JSON</td>
 			</tr>
 
@@ -51,12 +35,72 @@
 	</div>
 </div>
 
-<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleJSON">
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleNodeData">
+	<div class="table-container">
+		<div class="table-head">Node : {{selectedNode.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
+		<table style="width: 100%">
+			<tr class="table-row" *ngFor="let data of showData; let idx=index;" [class.even]="idx % 2 == 0" [class.odd]="idx % 2 != 0">
+				<td style="width: 40%; border: 1px solid grey;">{{data.key}}</td>
+				<td style="width: 60%; border: 1px solid grey;">{{data.value}}</td>
+			</tr>
+
+			<tr class="table-last" *ngIf="isMore">
+				<td colspan="2" class="more-option" (click)="onNodeShowMore(5)"><div class="more-button">Show More..</div></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleNodeJSON" style="width: 450px;">
 	<div class="table-container">
 		<div class="table-head">Node : {{selectedNode.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
 		<table style="width: 100%">
 			<tr class="table-row even" style="text-align: left;">
 				<td><div [innerHTML]="nodeJSON"></div></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleEdgeMenu">
+	<div class="table-container">
+		<div class="table-head">Edge : {{selectedEdge.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
+		<table style="width: 100%">
+
+			<tr class="table-row odd" (click)="onViewEdgeJSON()">
+				<td class="menu-item">View JSON</td>
+			</tr>
+
+			<tr class="table-row even" (click)="onViewEdge()">
+				<td class="menu-item">View Edge Data</td>
+			</tr>
+
+		</table>
+	</div>
+</div>
+
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleEdgeData">
+	<div class="table-container">
+		<div class="table-head">Edge : {{selectedEdge.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
+		<table style="width: 100%">
+			<tr class="table-row" *ngFor="let data of showData; let idx=index;" [class.even]="idx % 2 == 0" [class.odd]="idx % 2 != 0">
+				<td style="width: 40%; border: 1px solid grey;">{{data.key}}</td>
+				<td style="width: 60%; border: 1px solid grey;">{{data.value}}</td>
+			</tr>
+
+			<tr class="table-last" *ngIf="isMore">
+				<td colspan="2" class="more-option" (click)="onEdgeShowMore(5)"><div class="more-button">Show More..</div></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="detail-table" [style.left]="left" [style.top]="top" *ngIf="visibleEdgeJSON" style="width: 450px;">
+	<div class="table-container">
+		<div class="table-head">Edge : {{selectedEdge.label}}<div class="close-button fa fa-close" (click)="onCloseTable()"></div></div>
+		<table style="width: 100%">
+			<tr class="table-row even" style="text-align: left;">
+				<td><div [innerHTML]="edgeJSON"></div></td>
 			</tr>
 		</table>
 	</div>

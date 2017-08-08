@@ -20,14 +20,28 @@ export class GraphViewComponent {
 	private touchEvent: any;
 	private selectedNode: any;
 	private selectedNodeID: any;
-	private selectedData: any;
+	private selectedNodeData: any;
+
+	private selectedEdge: any;
+	private selectedEdgeID: any;
+	private selectedEdgeData: any;
+
 	private showData: any;
 	private dataCount = 0;
-	private visible = false;
-	private visibleMenu = false;
-	private visibleJSON = false;
+
+	private visibleNodeMenu = false;
+	private visibleNodeData = false;
+	private visibleNodeJSON = false;
+
+	private visibleEdgeMenu = false;
+	private visibleEdgeData = false;
+	private visibleEdgeJSON = false;
+
 	private isSelected = false;
+
 	private nodeJSON = "";
+	private edgeJSON = "";
+
 	private isMore = true;
 	private left = '0';
 	private top = '0';
@@ -134,7 +148,9 @@ export class GraphViewComponent {
 		
 		var self = this;
 		this.graph.on('selectNode', (clickObject) => {
+			this.onCloseTable();
 			this.isSelected = true;
+
 			this.selectedNode = {};
 
 			var nodeID = clickObject.nodes[0];
@@ -147,15 +163,51 @@ export class GraphViewComponent {
 			}
 
 			console.log("SHOW NODE MENU");
-			self.visibleMenu = true;
+			this.visibleNodeMenu = true;
+		});
+
+		this.graph.on('selectEdge', (clickObject) => {
+			this.onCloseTable();
+			this.isSelected = true;
+			this.selectedEdge = {};
+
+			console.log(clickObject);
+
+			if(clickObject.nodes.length > 0) {
+				this.selectedNode = {};
+
+				var nodeID = clickObject.nodes[0];
+				for(var i = 0; i < this.nodes.length; i++) {
+					var node = this.nodes[i];
+					if(node.id == nodeID) {
+						this.selectedNode = node;
+						break;
+					}
+				}
+
+				console.log("SHOW NODE MENU");
+				self.visibleNodeMenu = true;
+			} else {
+				var edgeID = clickObject.edges[0];
+				for(var i = 0; i < this.edges.length; i++) {
+					var edge = this.edges[i];
+					if(edge.id == edgeID) {
+						this.selectedEdge = edge;
+						break;
+					}
+				}
+
+				console.log("SHOW EDGE MENU");
+				this.visibleEdgeMenu = true;
+			}
 		});
 	}
 
 	onViewNode() {
-		this.selectedData = [];
-		this.visible = true;
-		this.visibleMenu = false;
-		this.visibleJSON = false;
+		this.selectedNodeData = [];
+		this.visibleNodeData = true;
+		this.visibleNodeMenu = false;
+		this.visibleNodeJSON = false;
 		this.isMore = false;
 
 		var keys = Object.keys(this.selectedNode.data);
@@ -165,18 +217,40 @@ export class GraphViewComponent {
 				key: key,
 				value: this.selectedNode.data[key],
 			};
-			this.selectedData.push(obj);
+			this.selectedNodeData.push(obj);
 		}
 		console.log("NODE SELECTED");
 		this.dataCount = 0;
-		this.onShowMore(5);
+		this.onNodeShowMore(5);
+		this.needClose = 0;
+	}
+
+	onViewEdge() {
+		this.selectedEdgeData = [];
+		this.visibleEdgeData = true;
+		this.visibleEdgeMenu = false;
+		this.visibleEdgeJSON = false;
+		this.isMore = false;
+
+		var keys = Object.keys(this.selectedEdge.data);
+		for(var j = 0; j < keys.length; j++) {
+			var key = keys[j];
+			var obj = {
+				key: key,
+				value: this.selectedEdge.data[key],
+			};
+			this.selectedEdgeData.push(obj);
+		}
+		console.log("Edge SELECTED");
+		this.dataCount = 0;
+		this.onEdgeShowMore(5);
 		this.needClose = 0;
 	}
 
 	onRemoveNode() {
-		this.visible = false;
-		this.visibleJSON = false;
-		this.visibleMenu = false;
+		this.visibleNodeData = false;
+		this.visibleNodeJSON = false;
+		this.visibleNodeMenu = false;
 
 		for(var i = 0; i < this.nodes.length; i++) {
 			if(this.nodes[i].id == this.selectedNode.id) {
@@ -195,8 +269,9 @@ export class GraphViewComponent {
 
 	}
 
-	onViewJSON() {
-		this.visibleJSON = true;
+	onViewNodeJSON() {
+		this.onCloseTable();
+		this.visibleNodeJSON = true;
 		for(var i = 0; i < this.nodes.length; i++) {
 			if(this.nodes[i].id == this.selectedNode.id) {
 				this.nodeJSON = JSON.stringify(this.nodes[i], null, " ");
@@ -204,7 +279,20 @@ export class GraphViewComponent {
 			}
 		}
 
-		this.nodeJSON = this.nodeJSON.replace(/,"/g, ', <br>"');
+		this.nodeJSON = this.nodeJSON.replace(/\n/g, '<p></p>');
+	}
+
+	onViewEdgeJSON() {
+		this.onCloseTable();
+		this.visibleEdgeJSON = true;
+		for(var i = 0; i < this.edges.length; i++) {
+			if(this.edges[i].id == this.selectedEdge.id) {
+				console.log(this.edges[i]);
+				this.edgeJSON = JSON.stringify(this.edges[i], null, " ");
+				break;
+			}
+		}
+		this.edgeJSON = this.edgeJSON.replace(/\n/g, '<p></p>');
 	}
 
 	getTypes() {
@@ -247,34 +335,58 @@ export class GraphViewComponent {
 			this.left = event.layerX + 'px';
 			this.top = (event.layerY + 62) + 'px';
 		} else {
-			this.visible = false;
-			this.visibleJSON = false;
-			this.visibleMenu = false;
+			this.onCloseTable();
 		}
 	}
 
-	onShowMore(more) {
+	onNodeShowMore(more) {
 		console.log("ON SHOW MORE");
 		this.needClose = 1;
 		this.dataCount += more;
-		if(this.dataCount >= this.selectedData.length) {
-			this.dataCount = this.selectedData.length;
+		if(this.dataCount >= this.selectedNodeData.length) {
+			this.dataCount = this.selectedNodeData.length;
 			this.isMore = false;
 		} else {
 			this.isMore = true;
 		}
-		this.refreshData();
+		this.refreshNodeData();
 	}
 
-	refreshData() {
+	refreshNodeData() {
 		this.showData = [];
 		for(var i = 0; i < this.dataCount; i++) {
-			this.showData.push(this.selectedData[i]);
+			this.showData.push(this.selectedNodeData[i]);
+		}
+	}
+
+	onEdgeShowMore(more) {
+		console.log("ON SHOW MORE");
+		this.needClose = 1;
+		this.dataCount += more;
+		if(this.dataCount >= this.selectedEdgeData.length) {
+			this.dataCount = this.selectedEdgeData.length;
+			this.isMore = false;
+		} else {
+			this.isMore = true;
+		}
+		this.refreshEdgeData();
+	}
+
+	refreshEdgeData() {
+		this.showData = [];
+		for(var i = 0; i < this.dataCount; i++) {
+			this.showData.push(this.selectedEdgeData[i]);
 		}
 	}
 
 	onCloseTable() {
-		this.visible = false;
+		this.visibleNodeData = false;
+		this.visibleNodeJSON = false;
+		this.visibleNodeMenu = false;
+
+		this.visibleEdgeData = false;
+		this.visibleEdgeJSON = false;
+		this.visibleEdgeMenu = false;
 	}
 
 	nodeChecked(item) {

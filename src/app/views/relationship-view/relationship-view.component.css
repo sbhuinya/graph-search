@@ -71,7 +71,6 @@
 }
 
 .button {
-	height: calc(100% - 8px);
     width: 28px;
     cursor: pointer;
 	margin-top: 4px;
