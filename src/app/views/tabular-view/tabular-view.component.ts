@@ -17,9 +17,9 @@ declare let vis: any;
 export class TabularViewComponent {
 	@Input() nodes: any;
 	@Output() change: EventEmitter<any> = new EventEmitter<any>();
-	
+
 	private activeItem = "";
-	private activeNode: any = {};	
+	private activeNode: any = {};
 	private activeData: any = [];
 
 
@@ -74,7 +74,7 @@ export class TabularViewComponent {
 			}
 		}
 
-		this.refreshData();		
+		this.refreshData();
 	}
 
 	refreshData() {
@@ -133,7 +133,8 @@ export class TabularViewComponent {
 						this.change.emit(data);
 					},
 					err => {
-						this.addToast("Oh snap! Node could not be added. Reason: Message returned by the Backend", 0);
+            var message = err._body;
+						this.addToast("Oh snap! Node could not be added. Reason: "+ message, 0);
 					}
 				);
 
@@ -184,7 +185,8 @@ export class TabularViewComponent {
 						this.addToast("Successfully updated item!", 1);
 					},
 					err => {
-						this.addToast("Oh snap! Property could not be added. Reason: Message returned by the Backend", 0);
+            var message = err._body;
+						this.addToast("Oh snap! Property could not be added. Reason: " + message, 0);
 					}
 				);
 
@@ -226,8 +228,9 @@ export class TabularViewComponent {
 						this.change.emit(data);
 					},
 					err => {
+            var message = err._body;
 						console.log("[tabular-view] \n Error on delete:", err);
-						this.addToast("Oh snap! Property could not be deleted. Reason: Message returned by the Backend", 0);
+						this.addToast("Oh snap! Property could not be deleted. Reason: " + message, 0);
 					}
 				);
 
