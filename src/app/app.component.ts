@@ -96,7 +96,7 @@ export class AppComponent {
         this.edges = [];
         this.nodes = [];
         var ids = {};
-        
+
         if(data['edges'] == undefined) {
             console.log("[AppComponent] \n Parse Data Error : No edges!");
         }
@@ -123,7 +123,7 @@ export class AppComponent {
         }
 
         ids = {};
-        
+
         for(var i = 0; i < data.nodes.length; i++) {
             var obj = data.nodes[i];
             var isExist = ids[obj.id];
@@ -192,7 +192,7 @@ export class AppComponent {
     onClosePane(event, item) {
         event.stopPropagation();
         console.log("CLOSE PANE");
-        
+
         item.isLoaded = false;
 
         var flag = item.value == this.activeItem;
@@ -202,7 +202,7 @@ export class AppComponent {
             this.nodes = [];
             this.edges = [];
         }
-        
+
         var keys = Object.keys(this.searchedData);
         for(var i = 0; i < keys.length; i++) {
             if(flag && keys[i] != item.value) {
