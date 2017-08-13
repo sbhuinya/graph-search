@@ -22,6 +22,8 @@ import { RelationshipEditDialog } from './views/relationship-view/relationship-e
 import { DataAddDialog } from './views/relationship-view/data-add-dialog/data-add-dialog.component';
 
 import {ToastyModule} from 'ng2-toasty';
+import { SearchComponent } from './tab-components/search/search.component';
+import { CreateComponent } from './tab-components/create/create.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import {ToastyModule} from 'ng2-toasty';
     RelationshipAddDialog,
     RelationshipEditDialog,
     DataAddDialog,
+    SearchComponent,
+    CreateComponent,
   ],
   imports: [
     BrowserModule,

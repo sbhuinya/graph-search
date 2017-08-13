@@ -1,0 +1,206 @@
+<div>
+	<div class="col-sm-2" style="height: 600px;">
+      <div class="col-sm-6" *ngFor="let item of leftItems">
+        <img class="left-item" src="assets/images/{{item.image}}.jpg" style="width: 60px; height: 60px; margin-top: 12px; " (click)="leftItemClicked(item.type)">
+        </div>
+  </div>
+
+	<div class="col-sm-10" style="height: 600px;">
+      <div class="graph-container" style="height: 100%;" (click)="onTouch($event)">
+          <div style="height: 100%; padding: 0;">
+              <div id="analysis-graph" style="height: 100%;"></div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div *ngIf="visibleAddNodeDialog" [style.left]="left" [style.top]="top" class="dialog">
+    <div>
+        <div style="font-size: 24px"><b>Add {{typeImgArr[selectedNode.type]}}</b> <div class="close-button fa fa-close" (click)="closeDialog()"></div> </div>
+        <div style="color: grey">{{typeImgArr[selectedNode.type]}}{{selectedNode.id}}</div>
+    </div>
+    <div class="horizontal-line">
+    </div>
+
+    <div style="height: 30px">
+        <div class="col-sm-3" style="height: 100%; color: grey; font-size: 20px; display:table;">
+            <label class="middle">Label</label>
+        </div>
+        <div class="col-sm-9" style="height: 100%;">
+            <input style="width: 100%; height: 100%; padding-left:8px;"  [(ngModel)]="selectedNode.label">
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; height: 100px;">
+        <div class="col-sm-3" style="height: 100%; color: grey; font-size: 20px; display:table;">
+            <label class="middle">Description</label>
+        </div>
+        <div class="col-sm-9" style="height: 100%;">
+            <textarea style="width: 100%; height: 100%; padding-left:8px;"  [(ngModel)]="selectedNode.description"> </textarea>
+        </div>
+    </div>
+
+    <div class="div-container">
+        <div style="width:600px; float:right">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></th>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let jsonData of nodeJsonArr">
+                        <td>
+                            <input type="checkbox" [(ngModel)]="jsonData.selected"/></td>
+                        <td>
+                            <input type="text" class="form-control" [(ngModel)]="jsonData.key" required/></td>
+                        <td>
+                            <input type="text" class="form-control" [(ngModel)]="jsonData.value" required/></td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+                <input (hide)="!personalDetails.length" type="button" class="btn btn-danger pull-right" value="Remove" (click)="remove()">
+                <input type="submit" class="btn btn-primary addnew pull-right" value="Add New" style="margin-right:12px;" (click)="addNew()">
+            </div>
+        </div>
+    </div>
+
+    <div class="horizontal-line"> </div>
+    <div class="form-group">
+        <input ng-hide="!personalDetails.length" type="button" class="btn btn-danger pull-right" value="Delete" style="width: 160px; height:40px; margin-right:12px;" (click)="deleteNode()">
+        <input type="submit" class="btn btn-primary addnew pull-right" value="Save" style="width: 160px; height:40px; margin-right:12px;" (click)="saveNode()">
+    </div>
+</div>
+
+<div *ngIf="visibleRefDialog" [style.left]="left" [style.top]="top" class="dialog">
+    <div>
+        <div style="font-size: 24px"><b>Add {{typeImgArr[selectedNode.type]}}</b><div class="close-button fa fa-close" (click)="closeDialog()"></div></div>
+    </div>
+    <div class="horizontal-line"></div>            
+    <div class="search-bar-container" style="width:700px; ">
+        <search-bar class="search-bar" (onSearch)="search($event)"></search-bar>
+    </div>
+
+    <div style="padding:0px 12px;">
+        <table style="width: 100%; margin-top:8px;">
+                <tr class="table-row">
+                    <td style="width: 20%; border: 1px solid grey; background: #7AC0F8; color: #fff">Select</td>                    
+                    <td style="width: 20%; border: 1px solid grey; background: #7AC0F8; color: #fff">Field1</td>
+                    <td style="width: 20%; border: 1px solid grey; background: #7AC0F8; color: #fff">Field2</td>
+                    <td style="width: 40%; border: 1px solid grey; background: #7AC0F8; color: #fff">Field3</td>   
+                </tr>
+                <tr class="table-row" *ngFor="let data of pageRefsArr[curPageIndex]; let idx=index;" [class.even]="idx % 2 == 0" [class.odd]="idx % 2 != 0">
+                    <td style="width: 20%; border: 1px solid grey;">
+                        <div>
+                            <input type="radio" id="test{{idx}}" name="radio-group" (click)="refItemSelected(data.index)" [(checked)]="data.checked">
+                            <label for="test{{idx}}" style="margin-bottom:14px;"></label>
+                        </div>
+                    </td>
+                    <td style="width: 20%; border: 1px solid grey;">{{data.field1}}</td>
+                    <td style="width: 20%; border: 1px solid grey;">{{data.field2}}</td>
+                    <td style="width: 40%; border: 1px solid grey;">{{data.field3}}</td>                
+                </tr>
+        </table>
+    </div>
+
+    <div style="text-align:center; width:100%; ">
+        <div class="pagination">
+                <a href="#" (click)="toLeftPage()">&laquo;</a>
+                <a [class.active]="curPageIndex==(i+firstVisiblePageIndex)" href="#" *ngFor="let data of visiblePageIndexArr; let i = index" (click)="refPageClicked(i)">{{i+firstVisiblePageIndex + 1}}</a>
+                <a href="#" (click)="toRightPage()">&raquo;</a>
+        </div>
+    </div>
+
+    <div class="horizontal-line"></div>            
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary addnew pull-right" value="Choose" style="width: 160px; height:40px; margin-right:12px;" (click)="chooseClicked()">            
+        <input type="button" class="btn btn-default pull-right" value="Close" style="width: 100px; height:40px; margin-right:12px;" (click)="closeRefDialog()">
+    </div>
+</div>
+
+<div *ngIf="visibleRelationDialog" [style.left]="left" [style.top]="top" class="dialog">
+    <div>
+        <div style="font-size: 24px"><b>Add New Relatioinship</b> <div class="close-button fa fa-close" (click)="closeRelationDialog()"></div></div>
+    </div>
+    <div class="horizontal-line">
+    </div>
+
+    <div style="height: 30px; font-size: 20px;">
+        <div class="col-sm-3" style="height: 100%; color: grey; display:table;">
+            <label class="middle">Source</label>
+        </div>
+        <div class="col-sm-9" style="height: 100%; color: grey; display:table;">
+            <label class="left"> {{relationFirstNode.id}}</label>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; height: 30px; font-size: 20px;">
+        <div class="col-sm-3" style="height: 100%; color: grey; display:table;">
+            <label class="middle">Target</label>
+        </div>
+        <div class="col-sm-9" style="height: 100%; color: grey; display:table;">
+            <label class="left"> {{relationSecondNode.id}}</label>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; height: 30px; font-size: 20px;">
+        <div class="col-sm-3" style="height: 100%; color: grey; display:table;">
+            <label class="middle">Relationship</label>
+        </div>
+        <div class="col-sm-9" style="height: 100%;">
+            <input style="width: 100%; height: 100%; padding-left:8px;" placeholder="User enters relationship" [(ngModel)]="relationshipStr">
+        </div>
+    </div>
+
+    <div class="div-container">
+        <div style="width:600px; float:right">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></th>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let jsonData of nodeJsonArr">
+                        <td>
+                            <input type="checkbox" [(ngModel)]="jsonData.selected"/></td>
+                        <td>
+                            <input type="text" class="form-control" [(ngModel)]="jsonData.key" required/></td>
+                        <td>
+                            <input type="text" class="form-control" [(ngModel)]="jsonData.value" required/></td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+                <input (hide)="!personalDetails.length" type="button" class="btn btn-danger pull-right" value="Remove" (click)="remove()">
+                <input type="submit" class="btn btn-primary addnew pull-right" value="Add New" style="margin-right:12px;" (click)="addNew()">
+            </div>
+        </div>
+    </div>
+
+    <div class="horizontal-line"> </div>
+    <div class="form-group">
+        <input ng-hide="!personalDetails.length" type="button" class="btn btn-danger pull-right" value="Delete" style="width: 160px; height:40px; margin-right:12px;" (click)="closeRelationDialog()">
+        <input type="submit" class="btn btn-primary addnew pull-right" value="Save" style="width: 160px; height:40px; margin-right:12px;" (click)="saveRelationship()">
+    </div>
+</div>
+
+<div class="detail-table" *ngIf="visibleJSON" style="width: 450px;">
+        <div class="table-container">
+            <div class="table-head">JSON<div class="dialog-close-button fa fa-close" (click)="closeJsonDialog()"></div></div>
+            <table style="width: 100%">
+                <tr class="table-row even" style="text-align: left;">
+                    <td><div [innerHTML]="nodeJSON"></div></td>
+                </tr>
+            </table>
+        </div>
+</div>

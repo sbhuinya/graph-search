@@ -127,6 +127,7 @@ export class GraphViewComponent {
 		var graphNodes = [];
 		for(var i = 0; i < this.nodes.length; i++) {
 			var node = this.nodes[i];
+			console.log("Node" + i, node);
 			var idx = this.typeDict[node.type].index;
 			if((this.typeList[idx].isSelected == 1 && this.nodeVisibleList[i]) ||
 				this.typeList[idx].isSelected == 2) {
@@ -148,6 +149,7 @@ export class GraphViewComponent {
 		
 		var self = this;
 		this.graph.on('selectNode', (clickObject) => {
+			console.log("selectNode");			
 			this.onCloseTable();
 			this.isSelected = true;
 
@@ -330,6 +332,7 @@ export class GraphViewComponent {
 	}
 
 	onTouch(event) {
+		console.log("onTouch");
 		if(this.isSelected) {
 			this.isSelected = false;
 			this.left = event.layerX + 'px';
@@ -337,6 +340,7 @@ export class GraphViewComponent {
 		} else {
 			this.onCloseTable();
 		}
+		console.log("IMPORTANT", this.isSelected);		
 	}
 
 	onNodeShowMore(more) {

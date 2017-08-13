@@ -1,0 +1,239 @@
+.left-item {
+    width: 50px;
+    height: 50px;
+    margin-top: 8px;
+}
+
+.detail-table {
+	position: absolute;
+	padding: 10px;
+	width: 300px;
+	z-index: 100;
+}
+
+.horizontal-line {
+    height: 1px;
+    background: lightgray;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.left {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.div-container {
+    margin: 20px;
+    display: inline-block;
+}
+
+.dialog {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    padding: 10px;
+    overflow: auto;
+    background: #FFFFFF;
+    box-shadow: 2px 1px 3px 2px rgba(35, 35, 35, 0.31);
+    border-radius: 5px;
+}
+
+.search-bar-container {
+	width: 100%;
+	text-align: center;
+}
+
+.search-bar {
+	width: 100%;
+}
+
+.table-row {
+    text-align: center;
+    height: 40px;
+}
+
+.table-row td {
+	padding: 5px;
+}
+
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #666;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #2196F3;
+    border-radius: 100%;
+    background: transparent;
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #2196F3;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.even {
+    background: #DEDEDE;	
+}
+
+.odd {
+    background: #EFEFEF;
+}
+
+.pagination {
+    display: inline-block;
+    margin: 12px;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active {
+    background-color: #2196F3;
+    color: white;
+    border: 1px solid #2196F3;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.pagination a:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.pagination a:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.close-button {
+	float: right;
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 6px;
+    color: grey;
+    text-align: center;
+	padding-top: 1px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.close-button:hover {
+	color: #333;
+}
+
+.graph-container {
+    width: calc(100% - 40px);
+    height: 100%;
+    display: inline-block;
+    margin: 20px;
+    padding: 0;
+    border-left: 1px solid #DDD;
+    border-right: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.detail-table {
+	position: absolute;
+	padding: 10px;
+	width: 300px;
+    z-index: 100;
+    right: 30px;
+    top: 60px;
+}
+
+.table-container {
+	width: 100%;
+	border-radius: 4px;
+	box-shadow: 1px 1px 1px 1px grey;
+	background: white;	
+}
+
+.table-head {
+    background: grey;
+    color: white;
+    padding: 13px;
+    padding-left: 20px;
+    font-size: 18px;
+    height: 48px;
+    border-radius: 4px 4px 0 0;
+}
+
+.table-row {
+	text-align: center;
+}
+
+.table-row td {
+	padding: 5px;
+}
+
+.even {
+    background: #DEDEDE;	
+}
+
+.dialog-close-button {
+    float: right;
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 6px;
+    color: grey;
+    text-align: center;
+    padding-top: 3px;
+    cursor: pointer;
+    margin-top: -3px;
+}

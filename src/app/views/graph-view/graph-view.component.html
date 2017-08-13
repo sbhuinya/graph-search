@@ -8,7 +8,7 @@
 				<li class="type-item" *ngFor="let item of typeList">
 					<img class="item-img" src="{{item.image}}" onerror="this.src='assets/images/no_theme.png'">
 					<md-checkbox class="item-chk item-select-not-all" [ngModel]="item.isSelected" (click)="nodeChecked(item)"
-						[class.item-select-all]="item.isSelected == 2" >{{item.type}}</md-checkbox>
+						[class.item-select-all]="item.isSelected == 2" >{{item.type}} Type</md-checkbox>
 				</li>
 			</ul>
 		</div>

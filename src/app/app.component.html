@@ -1,41 +1,18 @@
-<h1 class="title">
-	{{title}}
-</h1>
-
-<div class="search-bar-container">
-	<search-bar class="search-bar" (onSearch)="search($event)"></search-bar>
+<div style="background: #212121; display: inline-block; width: 100%">
+	<div>
+		<button class="title">DHRUV</button>
+		<button class="tablink" (click)="tabClicked(1)">Search</button>
+		<button class="tablink" (click)="tabClicked(2)">Create</button>
+		<button class="tablink" (click)="tabClicked(3)">Ingest</button>
+		<button class="tablink" (click)="tabClicked(4)">Stat</button>
+		
+		<button class="top-button" (click)="viewJsonClicked()">View JSON</button>
+		<button class="top-button" (clicK)="saveClicked()">Save</button>
+	</div>
 </div>
-
 <div>
-	<div class="col-sm-2 search-terms-container">
-		<!-- <div class="term-title">Search Terms</div> -->
-		<ul style="padding: 0;">
-			<li *ngFor="let item of searchItems" (click)="onSearchItem(item)" class="node-item">
-				<div class="item-content">
-					<div style="float: left;" *ngIf="item.isLoaded"><span class="fa fa-circle-o"></span></div>
-					<div class="find-term">{{item.value}}</div>
-				</div>
-				<div class="close" *ngIf="item.isLoaded" (click)="onClosePane($event, item)"><span class="fa fa-close"></span></div>
-				<div class="arrow" [class.active]="item.value == activeItem"></div>
-			</li>
-		</ul>
-	</div>
-
-	<div class="col-sm-10" style="padding: 0;">
-		<tabs class="container">
-			<tab [tabTitle]="'Graph'">
-				<graph-view *ngIf="isLoaded" style="height: 100%;" [edges]="edges" [nodes]="nodes"></graph-view>
-			</tab>
-
-			<tab [tabTitle]="'Tabular'">
-				<tabular-view (change)="onChangeTabular($event)" *ngIf="isLoaded" style="height: 100%;" [nodes]="nodes"></tabular-view>
-			</tab>
-
-			<tab [tabTitle]="'Relationships'">
-				<relationship-view (change)="onChangeRelationship($event)" *ngIf="isLoaded" style="height: 100%;" [nodes]="nodes" [edges]="edges"></relationship-view>
-			</tab>
-		</tabs>
-	</div>
+	<app-search *ngIf="selectedTabIndex==1"></app-search>
 </div>
-
-<ng2-toasty [position]="'top-right'"></ng2-toasty>
+<div style="height: 100%">
+	<app-create *ngIf="selectedTabIndex==2" [visibleJSON]="visibleJSON" (closeJSONDlg)="closeJSONDlg($event)"></app-create>
+</div>
